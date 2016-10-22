@@ -1,5 +1,6 @@
-<html>
+<html lang="ja">
 <head>
+  <meta charset="utf-8">
   <style>
     canvas{ background : url(./images/back.png) !important }
     </style>
@@ -16,10 +17,10 @@
          Vertices = Matter.Vertices,
          MouseConstraint = Matter.MouseConstraint;
 
-      // Engineì¬
-      var container = document.body;
+      // Engineä½œæˆ
+      var container = document.getElementById("container");
       var engine = Engine.create(container, {
-        render: { //ƒŒƒ“ƒ_ƒŠƒ“ƒOİ’è
+        render: { //ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°è¨­å®š
           options: {
             wireframes: false,
             width: 1280,
@@ -28,7 +29,7 @@
         }
       });
 
-      // ƒ}ƒEƒX‘€ì
+      // ãƒã‚¦ã‚¹æ“ä½œ
       var mouseConstraint = MouseConstraint.create(engine);
       World.add(engine.world, mouseConstraint);
 
@@ -39,9 +40,9 @@
           y: 602
         },
         vertices: Vertices.fromPath('L2 18 L0 20 L0 64 L64 64 L64 40 L56 36 L53 34 L46 30 L40 28 L32 26 L22 24 L14 22 Z'),
-        render: { //ƒŒƒ“ƒ_ƒŠƒ“ƒOİ’è
-          sprite: { //ƒXƒvƒ‰ƒCƒgİ’è
-            texture: 'images/yama.png', //ƒeƒNƒXƒ`ƒƒ‰æ‘œ‚ğw’è
+        render: { //ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°è¨­å®š
+          sprite: { //ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆè¨­å®š
+            texture: 'images/yama.png', //ãƒ†ã‚¯ã‚¹ãƒãƒ£ç”»åƒã‚’æŒ‡å®š
             xScale: 1,
             yScale: 1
           }
@@ -51,17 +52,17 @@
       Body.scale(numa, 16, 16);
       World.add(engine.world, numa);
 
-      //•¨‘Ì’Ç‰Á
-      var texlist = ['GodTanu.png', 'newcoin_jp.png', 'hakase_jiisan.png', 'HowDoYouLikeU.png', 'itumo_nem.png', 'haru28bit.png', 'TrendStream.png', 'Bungaku_Crypto.png', 'dreamcanada.png'];
+      //ç‰©ä½“è¿½åŠ 
+      var texlist = ['GodTanu.png', 'newcoin_jp.png', 'hakase_jiisan.png', 'HowDoYouLikeU.png', 'itumo_nem.png', 'haru28bit.png', 'TrendStream.png', 'Bungaku_Crypto.png', 'dreamcanada.png', 'tomotomo_9696.png'];
       for (var i = 0; i < texlist.length; i++) {
         var rnd = parseInt(Math.random() * 32);
         var x = 320 + rnd * 10;
         var y = -(i * 320);
         World.add(engine.world, [
-                    Bodies.circle(x, y, 60, { //’Ç‰Á
-                      render: { //ƒŒƒ“ƒ_ƒŠƒ“ƒOİ’è
-                        sprite: { //ƒXƒvƒ‰ƒCƒgİ’è
-                          texture: `images/${texlist[i]}`, //ƒeƒNƒXƒ`ƒƒ‰æ‘œ‚ğw’è
+                    Bodies.circle(x, y, 60, { //è¿½åŠ 
+                      render: { //ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°è¨­å®š
+                        sprite: { //ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆè¨­å®š
+                          texture: `images/${texlist[i]}`, //ãƒ†ã‚¯ã‚¹ãƒãƒ£ç”»åƒã‚’æŒ‡å®š
                         }
                       },
                       timeScale: 0.8
@@ -69,11 +70,20 @@
         ]);
       }
 
-      //Às
+      //å®Ÿè¡Œ
       Engine.run(engine);
     };
   </script>
 </head>
 <body>
+  <div id="container"></div>
+  <div>
+  <ul>
+    <li>å…ˆä½æ°‘ãªã®ã§è¿½åŠ ã—ã¦ã»ã—ã„</li>
+    <li>æ²¼ã«é£›ã³è¾¼ã¿ãŸã„</li>
+    <li>æ²¼ã«æµ¸ã‹ã‚‹äºˆå®šãŒã‚ã‚‹</li>
+  </ul>
+    ç­‰ã®æ–¹ã¯ twitter <a href="https://twitter.com/tomotomo_9696">@tomotomo_9696</a> ã«çŸ¥ã‚‰ã›ã‚‹ã¨è¿½åŠ ã•ã‚Œã¾ã™ã€‚(ä½•ã‚‚è¨€ã‚ã‚Œãªã‹ã£ãŸå ´åˆtwitterã‚¢ã‚¤ã‚³ãƒ³ã‚’ä½¿ã„ã¾ã™ã®ã§ã€ä»–ã®ç”»åƒãŒã„ã„å ´åˆã¯è¨€ã£ã¦ãã ã•ã„)
+  </div>
 </body>
 </html>
