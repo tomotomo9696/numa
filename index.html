@@ -35,15 +35,22 @@
           x: 500,
           y: 700
         },
-        vertices: Vertices.fromPath('L2 18 L0 20 L0 64 L64 64 L64 40 L56 36 L53 34 L46 30 L40 28 L32 26 L22 24 L14 22 Z')
+        vertices: Vertices.fromPath('L2 18 L0 20 L0 64 L64 64 L64 40 L56 36 L53 34 L46 30 L40 28 L32 26 L22 24 L14 22 Z'),
+        render: { //レンダリング設定
+          sprite: { //スプライト設定
+            texture: 'images/yama.png', //テクスチャ画像を指定
+            xScale: 15,
+            yScale: 15
+          }
+        }
       };
       var numa = Body.create(Common.extend({}, shape));
       Body.scale(numa, 15, 15);
       World.add(engine.world, numa);
 
       //物体追加
-      var texlist = ['images/tanu.png', 'images/bitman.png', 'images/hakase.png', 'images/mijinko.png', 'images/itumo.png'];
-      for (var i = 0; i < 5; i++) {
+      var texlist = ['GodTanu.png', 'newcoin_jp.png', 'hakase_jiisan.png', 'HowDoYouLikeU.png', 'itumo_nem.png', 'haru28bit.png', 'TrendStream.png', 'Bungaku_Crypto.png', 'dreamcanada.png'];
+      for (var i = 0; i < texlist.length; i++) {
         var rnd = parseInt(Math.random() * 10);
         var x = 400 + rnd * 10;
         var y = -(i * 300);
@@ -51,7 +58,7 @@
                     Bodies.circle(x, y, 60, { //追加
                       render: { //レンダリング設定
                         sprite: { //スプライト設定
-                          texture: texlist[i], //テクスチャ画像を指定
+                          texture: `images/${texlist[i]}`, //テクスチャ画像を指定
                         }
                       },
                       timeScale: 0.8
