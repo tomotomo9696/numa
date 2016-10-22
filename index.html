@@ -1,0 +1,69 @@
+<html>
+<head>
+  <script src="matter.min.js"></script>
+  <script>
+    window.onload = function () {
+      var Engine = Matter.Engine,
+         World = Matter.World,
+         Body = Matter.Body,
+         Bodies = Matter.Bodies,
+         Constraint = Matter.Constraint,
+         Composites = Matter.Composites,
+         Common = Matter.Common,
+         Vertices = Matter.Vertices,
+         MouseConstraint = Matter.MouseConstraint;
+
+      // Engine作成
+      var container = document.body;
+      var engine = Engine.create(container, {
+        render: { //レンダリング設定
+          options: {
+            wireframes: false,
+            width: 1280,
+            height: 720
+          }
+        }
+      });
+
+      // マウス操作
+      var mouseConstraint = MouseConstraint.create(engine);
+      World.add(engine.world, mouseConstraint);
+
+      var shape = {
+        isStatic: true,
+        position: {
+          x: 500,
+          y: 700
+        },
+        vertices: Vertices.fromPath('L2 18 L0 20 L0 64 L64 64 L64 40 L56 36 L53 34 L46 30 L40 28 L32 26 L22 24 L14 22 Z')
+      };
+      var numa = Body.create(Common.extend({}, shape));
+      Body.scale(numa, 15, 15);
+      World.add(engine.world, numa);
+
+      //物体追加
+      var texlist = ['images/tanu.png', 'images/bitman.png', 'images/hakase.png', 'images/mijinko.png', 'images/itumo.png'];
+      for (var i = 0; i < 5; i++) {
+        var rnd = parseInt(Math.random() * 10);
+        var x = 400 + rnd * 10;
+        var y = -(i * 300);
+        World.add(engine.world, [
+                    Bodies.circle(x, y, 60, { //追加
+                      render: { //レンダリング設定
+                        sprite: { //スプライト設定
+                          texture: texlist[i], //テクスチャ画像を指定
+                        }
+                      },
+                      timeScale: 0.8
+                    })
+        ]);
+      }
+
+      //実行
+      Engine.run(engine);
+    };
+  </script>
+</head>
+<body>
+</body>
+</html>
