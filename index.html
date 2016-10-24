@@ -1,4 +1,4 @@
-<html lang="ja">
+﻿<html lang="ja">
 <head>
   <meta charset="utf-8">
   <style>
@@ -53,13 +53,17 @@
       World.add(engine.world, numa);
 
       //物体追加
-      var texlist = ['GodTanu.png', 'newcoin_jp.png', 'hakase_jiisan.png', 'HowDoYouLikeU.png', 'itumo_nem.png', 'haru28bit.png', 'TrendStream.png', 'Bungaku_Crypto.png', 'dreamcanada.png', 'tomotomo_9696.png', 'gon61811.png'];
+      var texlist = ['GodTanu.png', 'newcoin_jp.png', 'hakase_jiisan.png', 'HowDoYouLikeU.png', 'itumo_nem.png', 'haru28bit.png', 'TrendStream.png', 'Bungaku_Crypto.png', 'dreamcanada.png', 'tomotomo_9696.png', 'gon61811.png', 'him0net.png', 'mizunashi.png'];
       for (var i = 0; i < texlist.length; i++) {
         var rnd = parseInt(Math.random() * 32);
         var x = 320 + rnd * 10;
         var y = -(i * 320);
         World.add(engine.world, [
                     Bodies.circle(x, y, 60, { //追加
+                      density: 0.002, //密度 default:0.001
+                      friction: 0.1, //摩擦 default:0.1
+                      frictionAir: 0.01, //空気摩擦 default:0.01
+                      restitution: 0.3, // 弾力性 default:0
                       render: { //レンダリング設定
                         sprite: { //スプライト設定
                           texture: `images/${texlist[i]}`, //テクスチャ画像を指定
