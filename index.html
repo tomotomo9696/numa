@@ -2,8 +2,12 @@
 <head>
   <meta charset="utf-8">
   <style>
-    canvas{ background : url(./images/back.png) !important }
-    </style>
+      canvas {
+        background: url(./images/back.png) !important;
+      }
+  </style>
+  <script src="pathseg.js"></script>
+  <script src="decomp.min.js" type="text/javascript"></script>
   <script src="matter.min.js"></script>
   <script>
     window.onload = function () {
@@ -15,7 +19,8 @@
          Composites = Matter.Composites,
          Common = Matter.Common,
          Vertices = Matter.Vertices,
-         MouseConstraint = Matter.MouseConstraint;
+         MouseConstraint = Matter.MouseConstraint,
+         Svg = Matter.Svg;
 
       // Engine作成
       var container = document.getElementById("container");
@@ -33,22 +38,21 @@
       var mouseConstraint = MouseConstraint.create(engine);
       World.add(engine.world, mouseConstraint);
 
-      var shape = {
+      var pathelement = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      pathelement.setAttribute("d", "M0 24 L0 64 L64 64 L64 47 L46 36 L26 27 L22 27 L20 28 L14 28 Z");
+      var options = {
         isStatic: true,
-        position: {
-          x: 465,
-          y: 602
-        },
-        vertices: Vertices.fromPath('L2 18 L0 20 L0 64 L64 64 L64 40 L56 36 L53 34 L46 30 L40 28 L32 26 L22 24 L14 22 Z'),
         render: { //レンダリング設定
-          sprite: { //スプライト設定
-            texture: 'images/yama.png', //テクスチャ画像を指定
-            xScale: 1,
-            yScale: 1
-          }
+          fillStyle: "#1b8d1b",
+          strokeStyle: "#1b8d1b"
         }
       };
-      var numa = Body.create(Common.extend({}, shape));
+      var numa = Matter.Bodies.fromVertices(
+        265,
+        340,
+        Svg.pathToVertices(pathelement),
+        options
+      );
       Body.scale(numa, 16, 16);
       World.add(engine.world, numa);
 
@@ -61,18 +65,32 @@
         World.add(engine.world, [
                     Bodies.circle(x, y, 60, { //追加
                       density: 0.002, //密度 default:0.001
-                      friction: 0.1, //摩擦 default:0.1
-                      frictionAir: 0.01, //空気摩擦 default:0.01
+                      friction: 0.12, //摩擦 default:0.1
+                      frictionAir: 0.012, //空気摩擦 default:0.01
                       restitution: 0.3, // 弾力性 default:0
                       render: { //レンダリング設定
                         sprite: { //スプライト設定
                           texture: `images/${texlist[i]}`, //テクスチャ画像を指定
                         }
                       },
-                      timeScale: 0.8
+                      collisionFilter: {
+                        mask: 0x0001
+                      }
                     })
         ]);
       }
+      World.add(engine.world, [
+        Bodies.rectangle(640, 640, 1280, 160, {
+          isStatic: true,
+          collisionFilter: {
+            category: 0x0002
+          },
+          render: {
+            fillStyle: "rgba(180, 153, 129, 0.8)",
+            strokeStyle: "rgb(180, 153, 129)"
+          }
+        })
+      ]);
 
       //実行
       Engine.run(engine);
@@ -82,11 +100,12 @@
 <body>
   <div id="container"></div>
   <div>
-  <ul>
-    <li>先住民なので追加してほしい</li>
-    <li>沼に飛び込みたい</li>
-    <li>沼に浸かる予定がある</li>
-  </ul>
+    <iframe width="300" height="80" src="https://www.youtube.com/embed/JhTqZApeYmc?autoplay=1&rel=0&autohide=0&start=23" frameborder="0"></iframe>
+    <ul>
+      <li>先住民なので追加してほしい</li>
+      <li>沼に飛び込みたい</li>
+      <li>沼に浸かる予定がある</li>
+    </ul>
     <p>等の方は twitter <a href="https://twitter.com/tomotomo_9696">@tomotomo_9696</a> に知らせると追加されます。(指定がない場合twitterアイコンを使いますので、他の画像がいい場合は言ってください)</p>
     <p><a href="https://github.com/tomotomo9696/numa">Github</a></p>
   </div>
