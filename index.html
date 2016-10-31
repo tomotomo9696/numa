@@ -5,27 +5,48 @@
       canvas {
         background: url(./images/back.png) !important;
       }
+
+      button {
+        width: 80px;
+        height: 80px;
+        padding: 0;
+        margin: 0;
+        overflow: visible;
+        vertical-align: top;
+      }
+
+      .JyuuminButton {
+        background: none;
+        border: 0;
+        font-size: 0;
+        line-height: 0;
+        cursor: pointer;
+      }
   </style>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
   <script src="pathseg.js"></script>
   <script src="decomp.min.js"></script>
   <script src="matter.min.js"></script>
   <script>
-    window.onload = function () {
-      var Engine = Matter.Engine,
+    var Engine = Matter.Engine,
          World = Matter.World,
-         Body = Matter.Body,
-         Bodies = Matter.Bodies,
-         Constraint = Matter.Constraint,
-         Composites = Matter.Composites,
-         Common = Matter.Common,
-         Vertices = Matter.Vertices,
-         MouseConstraint = Matter.MouseConstraint,
-         Svg = Matter.Svg;
+          Body = Matter.Body,
+        Bodies = Matter.Bodies,
+    Constraint = Matter.Constraint,
+    Composites = Matter.Composites,
+        Common = Matter.Common,
+      Vertices = Matter.Vertices,
+    MouseConst = Matter.MouseConstraint,
+           Svg = Matter.Svg;
 
-      // Engine作成
+    var _engine;
+
+    var Jyuuminlist = ['GodTanu.png', 'newcoin_jp.png', 'hakase_jiisan.png', 'HowDoYouLikeU.png', 'itumo_nem.png', 'haru28bit.png', 'TrendStream.png', 'Bungaku_Crypto.png', 'dreamcanada.png', 'tomotomo_9696.png', 'gon61811.png', 'him0net.png', 'mizunashi.png'];
+
+    function WorldStart() {
       var container = document.getElementById("container");
-      var engine = Engine.create(container, {
-        render: { //レンダリング設定
+      _engine = Engine.create(container, {
+        render: {
           options: {
             wireframes: false,
             width: 1280,
@@ -34,53 +55,38 @@
         }
       });
 
-      // マウス操作
-      var mouseConstraint = MouseConstraint.create(engine);
-      World.add(engine.world, mouseConstraint);
+      var mouseConstraint = MouseConst.create(_engine);
+      World.add(_engine.world, mouseConstraint);
 
       var pathelement = document.createElementNS("http://www.w3.org/2000/svg", "path");
       pathelement.setAttribute("d", "M20,42L12,40L0,32L0,128L128,128L128,86L120,82L112,76L96,68L88,66L80,62L72,64L48,56L32,48L28,46Z");
+
       var options = {
         isStatic: true,
         friction: 0,
-        render: { //レンダリング設定
+        render: {
           fillStyle: "#1b8d1b",
           strokeStyle: "#1b8d1b"
         }
       };
+
       var numa = Bodies.fromVertices(
         350,
         410,
         Svg.pathToVertices(pathelement),
         options
       );
-      Body.scale(numa, 8, 8);
-      World.add(engine.world, numa);
 
-      //物体追加
-      var texlist = ['GodTanu.png', 'newcoin_jp.png', 'hakase_jiisan.png', 'HowDoYouLikeU.png', 'itumo_nem.png', 'haru28bit.png', 'TrendStream.png', 'Bungaku_Crypto.png', 'dreamcanada.png', 'tomotomo_9696.png', 'gon61811.png', 'him0net.png', 'mizunashi.png'];
-      for (var i = 0; i < texlist.length; i++) {
+      Body.scale(numa, 8, 8);
+      World.add(_engine.world, numa);
+      for (var i = 0; i < Jyuuminlist.length; i++) {
         var rnd = parseInt(Math.random() * 32);
         var x = 320 + rnd * 10;
         var y = -(i * 320);
-        World.add(engine.world, [
-                    Bodies.circle(x, y, 60, { //追加
-                      density: 0.002, //密度 default:0.001
-                      friction: 0.1, //摩擦 default:0.1
-                      frictionAir: 0.012, //空気摩擦 default:0.01
-                      restitution: 0.3, // 弾力性 default:0
-                      render: { //レンダリング設定
-                        sprite: { //スプライト設定
-                          texture: `images/${texlist[i]}`, //テクスチャ画像を指定
-                        }
-                      },
-                      collisionFilter: {
-                        mask: 0x0001
-                      }
-                    })
-        ]);
+        SpawnJyuumin(x, y, Jyuuminlist[i]);
       }
-      World.add(engine.world, [
+
+      World.add(_engine.world, [
         Bodies.rectangle(640, 640, 1280, 160, {
           isStatic: true,
           collisionFilter: {
@@ -93,15 +99,94 @@
         })
       ]);
 
-      //実行
-      Engine.run(engine);
-    };
+      Matter.Events.on(_engine, "afterUpdate", function (event) {
+        var bodiesList = Matter.Composite.allBodies(_engine.world);
+        for (var i = 0; i < bodiesList.length; i++) {
+          if (bodiesList[i].label == "jyuumin") {
+            bodiesList[i].frictionAir = bodiesList[i].position.x >= 1000 && bodiesList[i].position.y >= 500 ? 0.5 : 0.012;
+          }
+        }
+      });
+
+      Engine.run(_engine);
+    }
+
+    function SpawnJyuumin(x, y, imagename) {
+      World.add(_engine.world, [
+          Bodies.circle(x, y, 60, { //追加
+            label: "jyuumin",
+            density: 0.002, //密度 default:0.001
+            friction: 0.1, //摩擦 default:0.1
+            frictionAir: 0.012, //空気摩擦 default:0.01
+            restitution: 0.3, // 弾力性 default:0
+            render: { //レンダリング設定
+              sprite: { //スプライト設定
+                texture: `images/${imagename}`, //テクスチャ画像を指定
+              }
+            },
+            collisionFilter: {
+              mask: 0x0001
+            }
+          })
+      ]);
+    }
+
+    function WorldReset() {
+      World.clear(_engine.world);
+      Engine.clear(_engine);
+      _engine.events = {};
+    }
+
+    function WorldRestart() {
+      WorldReset();
+      $("#container").empty();
+      WorldStart();
+      SeekBGM();
+    }
+
+    function SeekBGM() {
+      player.seekTo(23);
+    }
+
+    function Spawn(imagename){
+      var x = 320 + parseInt(Math.random() * 32) * 10;
+      var y = -(parseInt(Math.random() * 5) * 320);
+      SpawnJyuumin(x, y, imagename);
+    }
+
+    function AddJyuuminButton() {
+      for (var i = 0; i < Jyuuminlist.length; i++) {
+        var elem = $("<button></button>");
+        elem.html(`<img src="images/${Jyuuminlist[i]}" width="80" height="80" />`);
+        elem.addClass("JyuuminButton");
+        elem.attr("onclick", `Spawn("${Jyuuminlist[i]}");`);
+        $("#buttonlist").append(elem);
+      }
+    }
+
+    $(function () {
+      AddJyuuminButton();
+      WorldStart();
+    });
+  </script>
+  <script>
+    var tag = document.createElement('script');
+    tag.src = "//www.youtube.com/iframe_api";
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+    var player;
+    function onYouTubeIframeAPIReady() {
+      player = new YT.Player('YouTube-BGM', {});
+    }
   </script>
 </head>
 <body>
   <div id="container"></div>
   <div>
-    <iframe width="300" height="80" src="https://www.youtube.com/embed/JhTqZApeYmc?autoplay=1&rel=0&autohide=0&start=23" frameborder="0"></iframe>
+    <iframe id="YouTube-BGM" width="300" height="80" src="https://www.youtube.com/embed/JhTqZApeYmc?autoplay=1&rel=0&autohide=0&start=23&enablejsapi=1" frameborder="0"></iframe>
+    <div id="buttonlist">
+      <button onclick="WorldRestart();">リスタート</button>
+    </div>
     <ul>
       <li>先住民なので追加してほしい</li>
       <li>沼に飛び込みたい</li>
