@@ -86,24 +86,15 @@
         SpawnJyuumin(x, y, Jyuuminlist[i]);
       }
 
-      World.add(_engine.world, [
-        Bodies.rectangle(640, 640, 1280, 160, {
-          isStatic: true,
-          collisionFilter: {
-            category: 0x0002
-          },
-          render: {
-            fillStyle: "rgba(180, 153, 129, 0.8)",
-            strokeStyle: "rgb(180, 153, 129)"
-          }
-        })
-      ]);
+      SpawnNuma();
 
       Matter.Events.on(_engine, "afterUpdate", function (event) {
         var bodiesList = Matter.Composite.allBodies(_engine.world);
         for (var i = 0; i < bodiesList.length; i++) {
           if (bodiesList[i].label == "jyuumin") {
             bodiesList[i].frictionAir = bodiesList[i].position.x >= 1000 && bodiesList[i].position.y >= 500 ? 0.5 : 0.012;
+          } else if (bodiesList[i].label == "numa") {
+            var numa = bodiesList[i];
           }
         }
       });
@@ -131,6 +122,22 @@
       ]);
     }
 
+    function SpawnNuma() {
+      World.add(_engine.world, [
+        Bodies.rectangle(640, 640, 1280, 160, {
+          label: "numa",
+          isStatic: true,
+          collisionFilter: {
+            category: 0x0002
+          },
+          render: {
+            fillStyle: "rgba(180, 153, 129, 0.8)",
+            strokeStyle: "rgb(180, 153, 129)"
+          }
+        })
+      ]);
+    }
+
     function WorldReset() {
       World.clear(_engine.world);
       Engine.clear(_engine);
@@ -148,10 +155,16 @@
       player.seekTo(23);
     }
 
-    function Spawn(imagename){
+    function Spawn(imagename) {
       var x = 320 + parseInt(Math.random() * 32) * 10;
       var y = -(parseInt(Math.random() * 5) * 320);
       SpawnJyuumin(x, y, imagename);
+      var com = Matter.Composite.allBodies(_engine.world);
+      for (var i = 0; i < com.length; i++) {
+        if (com[i].label == "numa") var numa = com[i];
+      }
+      Matter.Composite.remove(_engine.world, numa);
+      SpawnNuma();
     }
 
     function AddJyuuminButton() {
