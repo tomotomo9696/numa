@@ -24,6 +24,7 @@
       }
   </style>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
   <script src="pathseg.js"></script>
   <script src="decomp.min.js"></script>
   <script src="matter.min.js"></script>
@@ -41,6 +42,10 @@
 
     var _engine;
 
+    var scale = 0.8;
+
+    var scaleList = ["0.5", "0.8", "1", "1.2", "1.5"];
+
     var Jyuuminlist = ['GodTanu.png', 'newcoin_jp.png', 'hakase_jiisan.png', 'HowDoYouLikeU.png', 'itumo_nem.png', 'haru28bit.png', 'TrendStream.png', 'Bungaku_Crypto.png', 'dreamcanada.png', 'tomotomo_9696.png', 'gon61811.png', 'him0net.png', 'mizunashi.png'];
 
     function WorldStart() {
@@ -55,11 +60,16 @@
         }
       });
 
+      _engine.world.bounds.min.x = -2560;
+      _engine.world.bounds.min.y = 0;
+      _engine.world.bounds.max.x = 2560;
+      _engine.world.bounds.max.y = 1000;
+
       var mouseConstraint = MouseConst.create(_engine);
       World.add(_engine.world, mouseConstraint);
 
       var pathelement = document.createElementNS("http://www.w3.org/2000/svg", "path");
-      pathelement.setAttribute("d", "M20,42L12,40L0,32L0,128L128,128L128,86L120,82L112,76L96,68L88,66L80,62L72,64L48,56L32,48L28,46Z");
+      pathelement.setAttribute("d", "M160,336L96,320L0,256L0,1024L1024,1024L1024,688L960,656L896,608L768,544L704,528L640,496L576,512L384,448L256,384L224,368Z");
 
       var options = {
         isStatic: true,
@@ -77,7 +87,6 @@
         options
       );
 
-      Body.scale(numa, 8, 8);
       World.add(_engine.world, numa);
       for (var i = 0; i < Jyuuminlist.length; i++) {
         var rnd = parseInt(Math.random() * 32);
@@ -88,13 +97,45 @@
 
       SpawnNuma();
 
-      Matter.Events.on(_engine, "afterUpdate", function (event) {
-        var bodiesList = Matter.Composite.allBodies(_engine.world);
-        for (var i = 0; i < bodiesList.length; i++) {
-          if (bodiesList[i].label == "jyuumin") {
-            bodiesList[i].frictionAir = bodiesList[i].position.x >= 1000 && bodiesList[i].position.y >= 500 ? 0.5 : 0.012;
-          } else if (bodiesList[i].label == "numa") {
-            var numa = bodiesList[i];
+      World.add(_engine.world, [
+        Bodies.rectangle(0, 1000, 5120, 160, {
+          label: "killer",
+          isStatic: true
+        }),
+        Bodies.rectangle(1280, 640, 2560, 160, {
+          label: "numaSensor",
+          isStatic: true,
+          isSensor: true,
+          render: {
+            visible: false
+          }
+        })
+      ]);
+
+      Matter.Events.on(_engine, 'collisionStart', function (event) {
+        var pairs = event.pairs;
+        for (var i = 0, j = pairs.length; i != j; ++i) {
+          var pair = pairs[i];
+          if (pair.bodyA.label === "numaSensor") {
+            pair.bodyB.frictionAir = 0.5;
+          } else if (pair.bodyB.label === "numaSensor") {
+            pair.bodyA.frictionAir = 0.5;
+          } else if (pair.bodyA.label === "killer") {
+            Matter.Composite.remove(_engine.world, pair.bodyB);
+          } else if (pair.bodyB.label === "killer") {
+            Matter.Composite.remove(_engine.world, pair.bodyA);
+          }
+        }
+      });
+
+      Matter.Events.on(_engine, 'collisionEnd', function (event) {
+        var pairs = event.pairs;
+        for (var i = 0, j = pairs.length; i != j; ++i) {
+          var pair = pairs[i];
+          if (pair.bodyA.label === "numaSensor") {
+            pair.bodyB.frictionAir = 0.012;
+          } else if (pair.bodyB.label === "numaSensor") {
+            pair.bodyA.frictionAir = 0.012;
           }
         }
       });
@@ -103,8 +144,8 @@
     }
 
     function SpawnJyuumin(x, y, imagename) {
-      World.add(_engine.world, [
-          Bodies.circle(x, y, 60, { //追加
+      World.add(_engine.world,
+          Bodies.circle(x, y, 60 * scale, { //追加
             label: "jyuumin",
             density: 0.002, //密度 default:0.001
             friction: 0.1, //摩擦 default:0.1
@@ -113,26 +154,28 @@
             render: { //レンダリング設定
               sprite: { //スプライト設定
                 texture: `images/${imagename}`, //テクスチャ画像を指定
+                xScale: scale,
+                yScale: scale
               }
             },
             collisionFilter: {
               mask: 0x0001
             }
           })
-      ]);
+      );
     }
 
     function SpawnNuma() {
       World.add(_engine.world, [
-        Bodies.rectangle(640, 640, 1280, 160, {
+        Bodies.rectangle(1280, 640, 2560, 160, {
           label: "numa",
           isStatic: true,
-          collisionFilter: {
-            category: 0x0002
-          },
           render: {
             fillStyle: "rgba(180, 153, 129, 0.8)",
             strokeStyle: "rgb(180, 153, 129)"
+          },
+          collisionFilter: {
+            mask: 0x0002
           }
         })
       ]);
@@ -177,7 +220,28 @@
       }
     }
 
+    function checkCookie() {
+      if ($.cookie("scale") && scaleList.indexOf($.cookie("scale")) !== -1) {
+        scale = $.cookie("scale");
+        console.log($(`input[type=radio][name=scale][value="${scale}"]`));
+        $(`input[type=radio][name=scale][value="${scale}"]`).prop("checked", true);
+      }
+    }
+
     $(function () {
+      $("input[type=radio][name=scale]").change(function () {
+        var val = $(this).val();
+        if (scaleList.indexOf(val) !== -1) {
+          $.cookie("scale", val);
+          scale = val;
+        } else {
+          scale = 1;
+        }
+      });
+    });
+
+    $(function () {
+      checkCookie();
       AddJyuuminButton();
       WorldStart();
     });
@@ -209,6 +273,14 @@
     <iframe id="YouTube-BGM" width="300" height="80" src="https://www.youtube.com/embed/JhTqZApeYmc?autoplay=1&rel=0&autohide=0&start=23&enablejsapi=1" frameborder="0"></iframe>
     <div id="buttonlist">
       <button onclick="WorldRestart();">リスタート</button>
+    </div>
+    <div>
+      住民の大きさ :
+      <input type="radio" name="scale" value="0.5">50%
+      <input type="radio" name="scale" value="0.8">80%
+      <input type="radio" name="scale" value="1">100%
+      <input type="radio" name="scale" value="1.2">120%
+      <input type="radio" name="scale" value="1.5">150%
     </div>
     <ul>
       <li>先住民なので追加してほしい</li>
