@@ -46,7 +46,19 @@
 
     var scaleList = ["0.5", "0.8", "1", "1.2", "1.5"];
 
-    var Jyuuminlist = ['GodTanu.png', 'newcoin_jp.png', 'hakase_jiisan.png', 'HowDoYouLikeU.png', 'itumo_nem.png', 'haru28bit.png', 'TrendStream.png', 'Bungaku_Crypto.png', 'dreamcanada.png', 'tomotomo_9696.png', 'gon61811.png', 'him0net.png', 'mizunashi.png', 'wildcatneko.png', 'uhohoiarale.png', 'namuyan_mine.png'];
+    var numa = Bodies.rectangle(1280, 640, 2560, 160, {
+      label: "numa",
+      isStatic: true,
+      render: {
+        fillStyle: "rgba(180, 153, 129, 0.8)",
+        strokeStyle: "rgb(180, 153, 129)"
+      },
+      collisionFilter: {
+        mask: 0x0002
+      }
+    });;
+
+    var Jyuuminlist = ['GodTanu.png', 'newcoin_jp.png', 'hakase_jiisan.png', 'HowDoYouLikeU.png', 'itumo_nem.png', 'haru28bit.png', 'TrendStream.png', 'Bungaku_Crypto.png', 'dreamcanada.png', 'tomotomo_9696.png', 'gon61811.png', 'him0net.png', 'mizunashi.png', 'wildcatneko.png', 'uhohoiarale.png', 'namuyan_mine.png', '0Ki1981.png'];
 
     function WorldStart() {
       var container = document.getElementById("container");
@@ -80,14 +92,14 @@
         }
       };
 
-      var numa = Bodies.fromVertices(
+      var yama = Bodies.fromVertices(
         350,
         410,
         Svg.pathToVertices(pathelement),
         options
       );
 
-      World.add(_engine.world, numa);
+      World.add(_engine.world, yama);
       for (var i = 0; i < Jyuuminlist.length; i++) {
         var rnd = parseInt(Math.random() * 32);
         var x = 320 + rnd * 10;
@@ -166,19 +178,7 @@
     }
 
     function SpawnNuma() {
-      World.add(_engine.world, [
-        Bodies.rectangle(1280, 640, 2560, 160, {
-          label: "numa",
-          isStatic: true,
-          render: {
-            fillStyle: "rgba(180, 153, 129, 0.8)",
-            strokeStyle: "rgb(180, 153, 129)"
-          },
-          collisionFilter: {
-            mask: 0x0002
-          }
-        })
-      ]);
+      World.add(_engine.world, numa);
     }
 
     function WorldReset() {
@@ -202,10 +202,6 @@
       var x = 320 + parseInt(Math.random() * 32) * 10;
       var y = -(parseInt(Math.random() * 5) * 320);
       SpawnJyuumin(x, y, imagename);
-      var com = Matter.Composite.allBodies(_engine.world);
-      for (var i = 0; i < com.length; i++) {
-        if (com[i].label == "numa") var numa = com[i];
-      }
       Matter.Composite.remove(_engine.world, numa);
       SpawnNuma();
     }
@@ -223,7 +219,6 @@
     function checkCookie() {
       if ($.cookie("scale") && scaleList.indexOf($.cookie("scale")) !== -1) {
         scale = $.cookie("scale");
-        console.log($(`input[type=radio][name=scale][value="${scale}"]`));
         $(`input[type=radio][name=scale][value="${scale}"]`).prop("checked", true);
       }
     }
@@ -264,6 +259,62 @@
       if (event.data == 0) {
         SeekBGM();
       }
+    }
+  </script>
+  <script>
+    $(function () {
+      var inputKey = [];
+      var command1 = [90, 65, 73, 70];
+      var command2 = [78, 69, 77];
+      $(window).keyup(function (e) {
+        inputKey.push(e.keyCode);
+        if (inputKey.toString().indexOf(command1) >= 0) {
+          SpawnZaif();
+          inputKey = [];
+        } else if (inputKey.toString().indexOf(command2) >= 0) {
+          SpawnNEM();
+          inputKey = [];
+        }
+      });
+    });
+
+    function SpawnZaif() {
+      Matter.Composite.remove(_engine.world, numa);
+      World.add(_engine.world,
+          Bodies.circle(500, -100, 120, {
+            density: 0.002,
+            friction: 0.1,
+            frictionAir: 0.012,
+            restitution: 0.3,
+            render: {
+              sprite: {
+                texture: `images/zaif.png`
+              }
+            }
+          })
+      );
+      inputKey = [];
+      SpawnNuma();
+    }
+
+    function SpawnNEM() {
+      Matter.Composite.remove(_engine.world, numa);
+      var pathelement = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      pathelement.setAttribute("d", "M64 0 C40 0 28 4 4 16 C0 18 0 20 0 24 C0 64 20 100 56 124 C64 128 64 128 72 124 C108 100 128 64 128 24 C128 20 128 18 124 16 C100 4 88 0 64 0 Z");
+      World.add(_engine.world, Bodies.fromVertices(500, -100, Svg.pathToVertices(pathelement), {
+        density: 0.002,
+        friction: 0.1,
+        frictionAir: 0.012,
+        restitution: 0.3,
+        render: {
+          sprite: {
+            texture: `images/NEM.png`,
+            xScale: 0.5,
+            yScale:0.5
+          }
+        }
+      }));
+      SpawnNuma();
     }
   </script>
 </head>
