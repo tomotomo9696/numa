@@ -2,8 +2,16 @@
 <head>
   <meta charset="utf-8">
   <style>
+      body {
+        margin: 0;
+        max-width: 1280px;
+      }
+
       canvas {
-        background: url(./images/back.png) !important;
+        width: 100%;
+        background-repeat: no-repeat !important;
+        background-image: url(./images/back.png) !important;
+        background-size: 100% !important;
       }
 
       button {
@@ -23,6 +31,7 @@
         cursor: pointer;
       }
   </style>
+  <meta name="viewport" content="width=device-width, user-scalable=no">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
   <script src="pathseg.js"></script>
@@ -58,7 +67,7 @@
       }
     });;
 
-    var Jyuuminlist = ['GodTanu.png', 'newcoin_jp.png', 'hakase_jiisan.png', 'HowDoYouLikeU.png', 'itumo_nem.png', 'haru28bit.png', 'TrendStream.png', 'Bungaku_Crypto.png', 'dreamcanada.png', 'tomotomo_9696.png', 'gon61811.png', 'him0net.png', 'mizunashi.png', 'wildcatneko.png', 'uhohoiarale.png', 'namuyan_mine.png', '0Ki1981.png'];
+    var Jyuuminlist = ['GodTanu.png', 'newcoin_jp.png', 'hakase_jiisan.png', 'HowDoYouLikeU.png', 'itumo_nem.png', 'haru28bit.png', 'TrendStream.png', 'Bungaku_Crypto.png', 'dreamcanada.png', 'tomotomo_9696.png', 'gon61811.png', 'him0net.png', 'mizunashi.png', 'wildcatneko.png', 'uhohoiarale.png', 'namuyan_mine.png', '0Ki1981.png', 'Y1aTz9CFIjoVoUD.png', 'momosuke4989.png'];
 
     function WorldStart() {
       var container = document.getElementById("container");
@@ -310,12 +319,40 @@
           sprite: {
             texture: `images/NEM.png`,
             xScale: 0.5,
-            yScale:0.5
+            yScale: 0.5
           }
         }
       }));
       SpawnNuma();
     }
+  </script>
+  <script>
+    var _ua = (function (u) {
+      return {
+        Tablet: (u.indexOf("windows") != -1 && u.indexOf("touch") != -1 && u.indexOf("tablet pc") == -1)
+          || u.indexOf("ipad") != -1
+          || (u.indexOf("android") != -1 && u.indexOf("mobile") == -1)
+          || (u.indexOf("firefox") != -1 && u.indexOf("tablet") != -1)
+          || u.indexOf("kindle") != -1
+          || u.indexOf("silk") != -1
+          || u.indexOf("playbook") != -1,
+        Mobile: (u.indexOf("windows") != -1 && u.indexOf("phone") != -1)
+          || u.indexOf("iphone") != -1
+          || u.indexOf("ipod") != -1
+          || (u.indexOf("android") != -1 && u.indexOf("mobile") != -1)
+          || (u.indexOf("firefox") != -1 && u.indexOf("mobile") != -1)
+          || u.indexOf("blackberry") != -1
+      }
+    })(window.navigator.userAgent.toLowerCase());
+    $(window).on('load resize', function () {
+      if (_ua.Mobile || _ua.Tablet) {
+        if (Math.floor(window.innerWidth / 16 * 9) + 50 > window.innerHeight) {
+          $("#container").width(window.innerWidth - 50 + "px");
+        } else {
+          $("#container").width(window.innerWidth);
+        }
+      }
+    });
   </script>
 </head>
 <body>
