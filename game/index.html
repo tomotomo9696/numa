@@ -29,7 +29,7 @@ let context=null,Buffer={bgm:null,se1:null,se2:null};function initAudio(){try{wi
           'onStateChange': function(a){
             if(a.data === 1 && !status){
               status = true;
-              player.pauseVideo();
+              setTimeout(player.pauseVideo, 0);
               console.log("loaded");
             }
           }
