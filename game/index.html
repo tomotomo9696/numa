@@ -10,6 +10,7 @@
       ["アスノヨゾラ哨戒班", "MASTER", "Orangestar feat. IA", "https://is4-ssl.mzstatic.com/image/thumb/Music3/v4/78/0e/00/780e0061-bd15-72d7-e303-a005693afd1d/source/400x400bb.jpg", "https://audio-ssl.itunes.apple.com/apple-assets-us-std-000001/Music3/v4/0d/ea/7e/0dea7ef6-033a-2867-7f48-16a2579ff889/mzaf_8324201668163737180.plus.aac.p.m4a", "https://www.amazon.co.jp/gp/product/B00VWHJQ2S/", "https://itunes.apple.com/jp/album/id972007073"]
     ]
     let auto = false;
+    let youtube = false;
     let Jyuuminlist = ['GodTanu.png', 'newcoin_jp.png', 'hakase_jiisan.png', 'HowDoYouLikeU.png', 'itumo_nem.png', 'haru28bit.png', 'TrendStream.png', 'Bungaku_Crypto.png', 'dreamcanada.png', 'tomotomo_9696.png', 'gon61811.png', 'him0net.png', 'mizunashi.png', 'wildcatneko.png', 'uhohoiarale.png', 'namuyan_mine.png', '0Ki1981.png', 'Y1aTz9CFIjoVoUD.png', 'momosuke4989.png', 'nyatla.png', 'hbkr.png', 'yuma300.png', 'onoonokatio.png'];
   </script>
   <script>
@@ -23,6 +24,7 @@ function startup(){
     context=null,
     alert("\u3053\u306E\u30D6\u30E9\u30A6\u30B6\u3067\u306FWeb Audio API\u304C\u30B5\u30DD\u30FC\u30C8\u3055\u308C\u3066\u3044\u307E\u305B\u3093\u3002")
   }
+  $("#player").css({zIndex : -10});
   loadPreviewAll();
   loadAudio("./perfect.mp3","se1");
   loadAudio("./good.mp3","se2");
@@ -39,7 +41,7 @@ let context=null,Buffer={bgm:null,se1:null,se2:null};function loadAudio(f,g){if(
       player = new YT.Player('player', {
         height: '225',
         width: '400',
-        videoId: '',
+        videoId: 'XogSflwXgpw',
         playerVars: { 'controls' : 0, 'fs' : 0, 'showinfo' : 0, 'iv_load_policy' : 3, 'modestbranding' : 1, 'autoplay' : 0, 'rel' : 0, 'vq' : 'midium', 'html5' : 1},
         events: {
           'onReady': function(a){
@@ -48,6 +50,13 @@ let context=null,Buffer={bgm:null,se1:null,se2:null};function loadAudio(f,g){if(
             if(a.data === 1 && !status){
               player.pauseVideo();
               console.log("loaded");
+            }
+
+            if(a.data === 1 && !youtube){
+              $("#player").css({zIndex : -10});
+              player.pauseVideo();
+              youtube=true;
+              console.log("get permission");
             }
           }
         }
@@ -169,7 +178,7 @@ let context=null,Buffer={bgm:null,se1:null,se2:null};function loadAudio(f,g){if(
 </head>
 <body>
   <div id="over" style="position:fixed;width:100vw;height:100vh;z-index:1000;background-color:#FFF;">
-    <button onclick="startup();">起動</button>
+    <button onclick="startup();">起動</button>下の埋め込んであるyoutubeを一度押してから左の起動ボタンを押してください。
   </div>
   <div style="position:static;">
     <div id="container" style="position:relative;height:100vh;">
@@ -177,7 +186,7 @@ let context=null,Buffer={bgm:null,se1:null,se2:null};function loadAudio(f,g){if(
           <canvas id="background" width="400" height="600" style="position:absolute;top:0;left:0;height:100%;width:auto;"></canvas>
           <canvas id="c" width="400" height="600" style="position:absolute;top:0;left:0;height:100%;"></canvas>
           <canvas id="numa" width="400" height="600" style="position:absolute;top:0;left:0;height:100%;"></canvas>
-          <div id="player" style="position:absolute;top:31.3%;left:0;z-index:-10;"></div>
+          <div id="player" style="position:absolute;top:31.3%;left:0;z-index:10000;"></div>
           <div id="jacketContainer" style="position:absolute;top:100;left:0;z-index:5;width:400px;height:400px;"><img id="jacket"></div>
           <div id="overlay" style="position:absolute;top:0;left:0;z-index:10;width:400px;height:600;background-color:#000;display:none;">
             <div style="position:relative;">
