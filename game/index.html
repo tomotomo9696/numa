@@ -187,7 +187,7 @@ let context=null,Buffer={bgm:null,se1:null,se2:null};function loadAudio(f,g){if(
     }
     .tap{
       touch-action : auto;
-      z-index:10000;
+      z-index:1500;
     }
   </style>
 </head>
@@ -211,7 +211,7 @@ let context=null,Buffer={bgm:null,se1:null,se2:null};function loadAudio(f,g){if(
           <canvas id="numa" width="400" height="600" style="position:absolute;top:0;left:0;height:100%;"></canvas>
           <div id="player" style="position:absolute;top:31.3%;left:0;z-index:10000;"></div>
           <div id="jacketContainer" style="position:absolute;top:100;left:0;z-index:5;width:400px;height:400px;"><img id="jacket"></div>
-          <div id="overlay" style="position:absolute;top:0;left:0;z-index:10;width:400px;height:600;background-color:#000;display:none;">
+          <div id="overlay" style="position:absolute;top:0;left:0;z-index:10;width:400px;height:600;background-color:#000;display:none;z-index:20000">
             <div style="position:relative;">
               <table id="result">
                 <tbody>
@@ -223,7 +223,7 @@ let context=null,Buffer={bgm:null,se1:null,se2:null};function loadAudio(f,g){if(
                   <tr><td>COMBO</td><td id="result_combo"></td></tr>
                 </tbody>
               </table>
-              <button id="continue" style="position:absolute;top:500;left:25;width:350px;height:50;z-index:20000">Continue</button>
+              <button id="continue" style="position:absolute;top:500;left:25;width:350px;height:50;">Continue</button>
             </div>
           </div>
           <div id="data"><span id="score">PERFECT:0000 GREAT:0000 GOOD:0000 MISS:0000</span> | <span id="combo">0000</span> COMBO | <span id="hantei"></span></div>
