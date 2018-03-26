@@ -24,7 +24,7 @@ var numa = Bodies.rectangle(1280, 640, 2560, 160, {
     mask: 0x0002
   }
 });;
-var Jyuuminlist = ['GodTanu.png', 'newcoin_jp.png', 'hakase_jiisan.png', 'HowDoYouLikeU.png', 'itumo_nem.png', 'haru28bit.png', 'TrendStream.png', 'Bungaku_Crypto.png', 'dreamcanada.png', 'tomotomo_9696.png', 'gon61811.png', 'him0net.png', 'mizunashi.png', 'wildcatneko.png', 'uhohoiarale.png', 'namuyan_mine.png', '0Ki1981.png', 'Y1aTz9CFIjoVoUD.png', 'momosuke4989.png', 'nyatla.png', 'hbkr.png', 'yuma300.png', 'onoonokatio.png'];
+var Jyuuminlist = ['GodTanu.png', 'newcoin_jp.png', 'hakase_jiisan.png', 'HowDoYouLikeU.png', 'itumo_nem.png', 'haru28bit.png', 'TrendStream.png', 'Bungaku_Crypto.png', 'dreamcanada.png', 'tomotomo_9696.png', 'gon61811.png', 'him0net.png', 'mizunashi.png', 'wildcatneko.png', 'uhohoiarale.png', 'namuyan_mine.png', '0Ki1981.png', 'Y1aTz9CFIjoVoUD.png', 'momosuke4989.png', 'nyatla.png', 'hbkr.png', 'yuma300.png', 'onoonokatio.png', 'design_bard.png'];
 
 function WorldStart() {
   var container = document.getElementById("container");
